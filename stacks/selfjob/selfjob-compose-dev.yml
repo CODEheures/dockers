@@ -14,6 +14,7 @@ services:
      - ./nginx.conf/api.selfjob.conf:/etc/nginx/conf.d/api.selfjob.conf
     ports:
      - 80:80
+     - 443:443
     networks:
      - webnet
   php:
