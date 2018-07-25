@@ -35,24 +35,24 @@ echo "is Dev: ${DEV}"
 echo "is prod: ${PROD}"
 echo "launch command: docker stack deploy -c ${CODEHEURES_DOCKER_CONFIG_ROOT}/stacks/${STACK_NAME}/${file} ${STACK_NAME}"
 
-if [ ${STACK_NAME} = 0 ]; then
+if [[ "$STACK_NAME" == 0 ]]; then
   echo ERROR: Bad stack name ${STACK_NAME} 1>&2
   exit 1;
 fi
 
-if [ ${RECONFIGURE_ALL} = 1 ]; then
-  source ${CODEHEURES_DOCKER_CONFIG_ROOT}/images/builds && docker stack rm ${STACK_NAME} && sleep 10
+if [[ "$RECONFIGURE_ALL" == 1 ]]; then
+  source ${CODEHEURES_DOCKER_CONFIG_ROOT}/bashs/builds && docker stack rm ${STACK_NAME} && sleep 10
 fi
 
-if [ ${RESTART} = 1 ]; then
+if [[ "$RESTART" == 1 ]]; then
   docker stack rm ${STACK_NAME} && sleep 10
 fi
 
-if [ ${DEV} = 1 ]; then
+if [[ "$DEV" == 1 ]]; then
   file=${STACK_NAME}-compose-dev.yml
 fi
 
-if [ ${PROD} = 1 ]; then
+if [[ "$PROD" == 1 ]]; then
   file=${STACK_NAME}-compose-prod.yml
 fi
 
