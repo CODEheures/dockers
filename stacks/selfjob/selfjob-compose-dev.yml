@@ -10,6 +10,7 @@ services:
      - ./nginx.conf/adminer.conf:/etc/nginx/conf.d/adminer.conf
      - ./nginx.conf/phpinfo.conf:/etc/nginx/conf.d/phpinfo.conf
      - ./nginx.conf/selfjob.conf:/etc/nginx/conf.d/selfjob.conf
+     - ./nginx.conf/echo.selfjob.conf:/etc/nginx/conf.d/echo.selfjob.conf
      - ./nginx.conf/api.selfjob.conf:/etc/nginx/conf.d/api.selfjob.conf
     ports:
      - 80:80
@@ -24,6 +25,17 @@ services:
      - /var/www:/var/www
     networks:
      - webnet
+  redis:
+      image: redis:latest
+      deploy:
+        restart_policy:
+          condition: on-failure
+      volumes:
+       - redis:/data
+      ports:
+       - "6379:6379"
+      networks:
+       - webnet
   mariadb:
     image: mariadb
     deploy:
@@ -35,7 +47,7 @@ services:
      - /var/lib/mysql:/var/lib/mysql
     networks:
      - webnet
-  selfjob_frontv2:
+  frontv2:
     image: ${CODEHEURES_NPM_IMAGE}
     volumes:
      - /var/www/self-job/frontv2:/var/www/self-job/frontv2
@@ -43,6 +55,14 @@ services:
     command: npm run dev
     networks:
      - webnet
+  laravel_echo:
+      image: ${CODEHEURES_LARAVEL_ECHO_IMAGE}
+      volumes:
+       - /var/www/self-job/api:/var/www/self-job/api
+      working_dir: /var/www/self-job/api
+      command: laravel-echo-server start
+      networks:
+       - webnet
   elasticsearch:
     image: ${CODEHEURES_ELASTICSEARCH_IMAGE}
     environment:
@@ -58,6 +78,8 @@ services:
       - webnet
 volumes:
   elastic:
+    driver: local
+  redis:
     driver: local
 networks:
   webnet:
