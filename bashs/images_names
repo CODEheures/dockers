@@ -1,0 +1,6 @@
+#!/bin/sh
+export CODEHEURES_DOCKER_CONFIG_ROOT=`cd $(dirname "${BASH_SOURCE[0]}")/.. && pwd`
+
+export CODEHEURES_PHP_IMAGE=`cat ${CODEHEURES_DOCKER_CONFIG_ROOT}/images/php/tag`
+export CODEHEURES_NPM_IMAGE=`cat ${CODEHEURES_DOCKER_CONFIG_ROOT}/images/npm/tag`
+export CODEHEURES_ELASTICSEARCH_IMAGE=`cat ${CODEHEURES_DOCKER_CONFIG_ROOT}/images/elasticsearch/tag`

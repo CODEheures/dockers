@@ -1,0 +1,9 @@
+#!/bin/bash
+
+## build images ##
+##################
+source $(dirname "$BASH_SOURCE[0]")/images_names
+
+docker build -t ${CODEHEURES_PHP_IMAGE} ${CODEHEURES_DOCKER_CONFIG_ROOT}/images/php
+docker build -t ${CODEHEURES_NPM_IMAGE} ${CODEHEURES_DOCKER_CONFIG_ROOT}/images/npm
+docker build -t ${CODEHEURES_ELASTICSEARCH_IMAGE} ${CODEHEURES_DOCKER_CONFIG_ROOT}/images/elasticsearch

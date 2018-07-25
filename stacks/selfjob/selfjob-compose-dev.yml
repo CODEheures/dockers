@@ -1,0 +1,63 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+    volumes:
+     - /var/www:/var/www
+     - ./nginx.conf/adminer.conf:/etc/nginx/conf.d/adminer.conf
+     - ./nginx.conf/phpinfo.conf:/etc/nginx/conf.d/phpinfo.conf
+     - ./nginx.conf/selfjob.conf:/etc/nginx/conf.d/selfjob.conf
+     - ./nginx.conf/api.selfjob.conf:/etc/nginx/conf.d/api.selfjob.conf
+    ports:
+     - 80:80
+    networks:
+     - webnet
+  php:
+    image: ${CODEHEURES_PHP_IMAGE}
+    deploy:
+      restart_policy:
+        condition: on-failure
+    volumes:
+     - /var/www:/var/www
+    networks:
+     - webnet
+  mariadb:
+    image: mariadb
+    deploy:
+      restart_policy:
+        condition: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+     - /var/lib/mysql:/var/lib/mysql
+    networks:
+     - webnet
+  selfjob_frontv2:
+    image: ${CODEHEURES_NPM_IMAGE}
+    volumes:
+     - /var/www/self-job/frontv2:/var/www/self-job/frontv2
+    working_dir: /var/www/self-job/frontv2
+    command: npm run dev
+    networks:
+     - webnet
+  elasticsearch:
+    image: ${CODEHEURES_ELASTICSEARCH_IMAGE}
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elastic:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - webnet
+volumes:
+  elastic:
+    driver: local
+networks:
+  webnet:
