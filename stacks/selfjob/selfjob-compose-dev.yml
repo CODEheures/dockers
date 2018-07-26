@@ -1,4 +1,13 @@
 version: "3"
+volumes:
+  elastic:
+    driver: local
+  redis:
+    driver: local
+  logs:
+    driver: local
+networks:
+  webnet:
 services:
   nginx:
     image: nginx:latest
@@ -7,11 +16,9 @@ services:
         condition: on-failure
     volumes:
      - /var/www:/var/www
-     - ./nginx.conf/adminer.conf:/etc/nginx/conf.d/adminer.conf
-     - ./nginx.conf/phpinfo.conf:/etc/nginx/conf.d/phpinfo.conf
-     - ./nginx.conf/selfjob.conf:/etc/nginx/conf.d/selfjob.conf
-     - ./nginx.conf/echo.selfjob.conf:/etc/nginx/conf.d/echo.selfjob.conf
-     - ./nginx.conf/api.selfjob.conf:/etc/nginx/conf.d/api.selfjob.conf
+     - logs:/var/logs
+     - ./nginx.conf/tools.conf:/etc/nginx/conf.d/tools.conf
+     - ./nginx.conf/app-${DEPLOY_TYPE}.conf:/etc/nginx/conf.d/app.conf
     ports:
      - 80:80
      - 443:443
@@ -54,6 +61,8 @@ services:
      - /var/www/self-job/frontv2:/var/www/self-job/frontv2
     working_dir: /var/www/self-job/frontv2
     command: npm run dev
+    extra_hosts:
+      - "${HOST_API}: ${CODEHEURE_DOCKER_HOST_IP}"
     networks:
      - webnet
   laravel_echo:
@@ -62,6 +71,8 @@ services:
        - /var/www/self-job/api:/var/www/self-job/api
       working_dir: /var/www/self-job/api
       command: laravel-echo-server start
+      extra_hosts:
+       - "${HOST_API}: ${CODEHEURE_DOCKER_HOST_IP}"
       networks:
        - webnet
   elasticsearch:
@@ -77,10 +88,3 @@ services:
       - 9300:9300
     networks:
       - webnet
-volumes:
-  elastic:
-    driver: local
-  redis:
-    driver: local
-networks:
-  webnet:
