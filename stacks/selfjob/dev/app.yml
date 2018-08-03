@@ -1,0 +1,99 @@
+version: "3.4"
+volumes:
+  logs_api:
+    driver: local
+  logs_adminer:
+    driver: local
+  redis:
+    driver: local
+  elastic:
+    driver: local
+networks:
+  traefik:
+    external:
+      name: traefik_proxy
+services:
+  api:
+    image: nginx:latest
+    volumes:
+      - /var/www/selfjob/api:/var/www/selfjob/api
+      - logs_api:/var/logs
+      - ./api.conf:/etc/nginx/conf.d/api.conf
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:api.selfjob.test"
+  adminer:
+    image: nginx:latest
+    volumes:
+      - /var/www/adminer:/var/www/adminer
+      - logs_adminer:/var/logs
+      - ./adminer.conf:/etc/nginx/conf.d/adminer.conf
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:adminer.selfjob.test"
+  php:
+    image: codeheures/php-fpm:v1
+    volumes:
+      - /var/www:/var/www
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=false"
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=false"
+  laravel_echo:
+    image: codeheures/laravel-echo:v1
+    volumes:
+      - /var/www/selfjob/api:/var/www/selfjob/api
+    working_dir: /var/www/selfjob/api
+    command: laravel-echo-server start
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.echo.frontend.rule=Host:echo.selfjob.test"
+  frontv2:
+    image: codeheures/npm:v1
+    volumes:
+      - /var/www/selfjob/frontv2:/var/www/selfjob/frontv2
+    working_dir: /var/www/selfjob/frontv2
+    command: npm run dev
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.front.frontend.rule=Host:selfjob.test"
+  redis:
+    image: redis:latest
+    volumes:
+      - redis:/data
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=false"
+  elasticsearch:
+    image: codeheures/elasticsearch:v1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elastic:/usr/share/elasticsearch/data
+    ports:
+      - "127.0.0.1:9200:9200"
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=false"
