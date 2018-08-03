@@ -1,8 +1,8 @@
 #!/bin/bash
 # docker
-alias whoIsDockerPhp='docker container ls | grep codeheures/php-fpm:v1 | grep selfjob | awk '\''{print $1 }'\'''
-alias whoIsDockerNpm='docker container ls | grep codeheures/npm:v1 | grep selfjob | awk '\''{print $1 }'\'''
-alias whoIsDockerLaravelEcho='docker container ls | grep codeheures/laravel-echo:v1 | grep selfjob | awk '\''{print $1 }'\'''
+alias whoIsDockerPhp='docker container ls | grep codeheures/php-fpm:v1 | grep selfjob_ | awk '\''{print $1 }'\'''
+alias whoIsDockerNpm='docker container ls | grep codeheures/npm:v1 | grep selfjob_ | awk '\''{print $1 }'\'''
+alias whoIsDockerLaravelEcho='docker container ls | grep codeheures/laravel-echo:v1 | grep selfjob_ | awk '\''{print $1 }'\'''
 alias php='docker exec -ti -w $(pwd) $(whoIsDockerPhp) php'
 alias composer='docker exec -ti -w $(pwd) $(whoIsDockerPhp) composer'
 alias logsnpm='docker container logs --follow $(whoIsDockerNpm)'

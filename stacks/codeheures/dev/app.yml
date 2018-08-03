@@ -1,0 +1,52 @@
+version: "3.4"
+volumes:
+  logs_api:
+    driver: local
+  logs_adminer:
+    driver: local
+networks:
+  traefik:
+    external:
+      name: traefik_proxy
+services:
+  api:
+    image: nginx:latest
+    volumes:
+      - /var/www/codeheures/api:/var/www/codeheures/api
+      - logs_api:/var/logs
+      - ./api.conf:/etc/nginx/conf.d/api.conf
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:api.codeheures.test"
+  adminer:
+    image: nginx:latest
+    volumes:
+      - /var/www/adminer:/var/www/adminer
+      - logs_adminer:/var/logs
+      - ./adminer.conf:/etc/nginx/conf.d/adminer.conf
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:adminer.codeheures.test"
+  php:
+    image: codeheures/php-fpm:v1
+    volumes:
+      - /var/www:/var/www
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=false"
+  front:
+    image: codeheures/npm:v1
+    volumes:
+      - /var/www/codeheures/front:/var/www/codeheures/front
+    working_dir: /var/www/codeheures/front
+    command: npm run dev
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.front.frontend.rule=Host:codeheures.test"
