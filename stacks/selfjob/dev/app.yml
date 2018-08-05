@@ -11,7 +11,7 @@ volumes:
 networks:
   traefik:
     external:
-      name: traefik_proxy
+      name: traefik_proxy1
 services:
   api:
     image: nginx:latest
@@ -21,12 +21,14 @@ services:
       - ./api.conf:/etc/nginx/conf.d/api.conf
     networks:
       - traefik
-    labels:
-      - "traefik.docker.network=traefik"
-      - "traefik.port=80"
-      - "traefik.backend=api-selfjob"
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:api.selfjob.test"
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=80"
+        - "traefik.backend=api-selfjob"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:api.selfjob.test"
   adminer:
     image: nginx:latest
     volumes:
@@ -35,21 +37,25 @@ services:
       - ./adminer.conf:/etc/nginx/conf.d/adminer.conf
     networks:
       - traefik
-    labels:
-      - "traefik.docker.network=traefik"
-      - "traefik.port=80"
-      - "traefik.backend=adminer-selfjob"
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:adminer.selfjob.test"
-      - "traefik.frontend.auth.basic=sylvain:$$apr1$$YuXSTghB$$ED5vjLJdNctJ14BVWQFsC1"
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=80"
+        - "traefik.backend=adminer-selfjob"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:adminer.selfjob.test"
+        - "traefik.frontend.auth.basic=sylvain:$$apr1$$YuXSTghB$$ED5vjLJdNctJ14BVWQFsC1"
   php:
     image: codeheures/php-fpm:v1
     volumes:
       - /var/www:/var/www
     networks:
       - traefik
-    labels:
-      - "traefik.enable=false"
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=false"
   mariadb:
     image: mariadb
     environment:
@@ -58,8 +64,10 @@ services:
       - /var/lib/mysql:/var/lib/mysql
     networks:
       - traefik
-    labels:
-      - "traefik.enable=false"
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=false"
   laravel_echo:
     image: codeheures/laravel-echo:v1
     volumes:
@@ -68,12 +76,14 @@ services:
     command: laravel-echo-server start
     networks:
       - traefik
-    labels:
-      - "traefik.docker.network=traefik"
-      - "traefik.port=6001"
-      - "traefik.backend=echo-selfjob"
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:echo.selfjob.test"
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=6001"
+        - "traefik.backend=echo-selfjob"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:echo.selfjob.test"
   frontv2:
     image: codeheures/npm:v1
     volumes:
@@ -82,20 +92,24 @@ services:
     command: npm run dev
     networks:
       - traefik
-    labels:
-      - "traefik.docker.network=traefik"
-      - "traefik.port=8002"
-      - "traefik.backend=selfjob"
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:selfjob.test"
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=8002"
+        - "traefik.backend=selfjob"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:selfjob.test"
   redis:
     image: redis:latest
     volumes:
       - redis:/data
     networks:
       - traefik
-    labels:
-      - "traefik.enable=false"
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=false"
   elasticsearch:
     image: codeheures/elasticsearch:v1
     environment:
@@ -106,10 +120,12 @@ services:
       - elastic:/usr/share/elasticsearch/data
     networks:
       - traefik
-    labels:
-      - "traefik.docker.network=traefik"
-      - "traefik.port=9200"
-      - "traefik.backend=elastic-selfjob"
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:elastic.selfjob.test"
-      - "traefik.frontend.auth.basic=sylvain:$$apr1$$rgfeb6lD$$JSRW/vK.NVjd94FOo.zdC/"
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=9200"
+        - "traefik.backend=elastic-selfjob"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:elastic.selfjob.test"
+        - "traefik.frontend.auth.basic=sylvain:$$apr1$$rgfeb6lD$$JSRW/vK.NVjd94FOo.zdC/"
