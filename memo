@@ -1,2 +1,0 @@
-extra_hosts:
-       - "${HOST_API}: ${CODEHEURE_DOCKER_HOST_IP}"

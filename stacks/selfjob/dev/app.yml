@@ -22,6 +22,9 @@ services:
     networks:
       - traefik
     labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.port=80"
+      - "traefik.backend=api-selfjob"
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:api.selfjob.test"
   adminer:
@@ -33,8 +36,12 @@ services:
     networks:
       - traefik
     labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.port=80"
+      - "traefik.backend=adminer-selfjob"
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:adminer.selfjob.test"
+      - "traefik.frontend.auth.basic=sylvain:$$apr1$$YuXSTghB$$ED5vjLJdNctJ14BVWQFsC1"
   php:
     image: codeheures/php-fpm:v1
     volumes:
@@ -62,8 +69,11 @@ services:
     networks:
       - traefik
     labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.port=6001"
+      - "traefik.backend=echo-selfjob"
       - "traefik.enable=true"
-      - "traefik.echo.frontend.rule=Host:echo.selfjob.test"
+      - "traefik.frontend.rule=Host:echo.selfjob.test"
   frontv2:
     image: codeheures/npm:v1
     volumes:
@@ -73,8 +83,11 @@ services:
     networks:
       - traefik
     labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.port=8002"
+      - "traefik.backend=selfjob"
       - "traefik.enable=true"
-      - "traefik.front.frontend.rule=Host:selfjob.test"
+      - "traefik.frontend.rule=Host:selfjob.test"
   redis:
     image: redis:latest
     volumes:
@@ -91,9 +104,12 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - elastic:/usr/share/elasticsearch/data
-    ports:
-      - "127.0.0.1:9200:9200"
     networks:
       - traefik
     labels:
-      - "traefik.enable=false"
+      - "traefik.docker.network=traefik"
+      - "traefik.port=9200"
+      - "traefik.backend=elastic-selfjob"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:elastic.selfjob.test"
+      - "traefik.frontend.auth.basic=sylvain:$$apr1$$rgfeb6lD$$JSRW/vK.NVjd94FOo.zdC/"

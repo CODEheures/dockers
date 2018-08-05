@@ -18,6 +18,9 @@ services:
     networks:
       - traefik
     labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.port=80"
+      - "traefik.backend=api-codeheures"
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:api.codeheures.test"
   adminer:
@@ -29,8 +32,12 @@ services:
     networks:
       - traefik
     labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.port=80"
+      - "traefik.backend=adminer-codeheures"
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:adminer.codeheures.test"
+      - "traefik.frontend.auth.basic=sylvain:$$apr1$$YuXSTghB$$ED5vjLJdNctJ14BVWQFsC1"
   php:
     image: codeheures/php-fpm:v1
     volumes:
@@ -48,5 +55,8 @@ services:
     networks:
       - traefik
     labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.port=8002"
+      - "traefik.backend=codeheures"
       - "traefik.enable=true"
-      - "traefik.front.frontend.rule=Host:codeheures.test"
+      - "traefik.frontend.rule=Host:codeheures.test"
