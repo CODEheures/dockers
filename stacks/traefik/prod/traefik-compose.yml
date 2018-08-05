@@ -10,7 +10,8 @@ services:
       - ./traefik.toml:/traefik.toml
       - ./acme.json:/acme.json
     networks:
-      - proxy
+      - proxy1
+      - proxy2
     deploy:
       restart_policy:
         condition: on-failure
