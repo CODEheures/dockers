@@ -40,7 +40,6 @@ debug = false
 email = "webmaster@codeheures.fr"
 storage = "acme.json"
 onHostRule = true
-caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
 entryPoint = "https"
   [acme.httpChallenge]
   entryPoint = "http"
