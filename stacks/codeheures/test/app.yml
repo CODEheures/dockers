@@ -1,0 +1,70 @@
+version: "3.4"
+volumes:
+  logs_api:
+    driver: local
+  logs_adminer:
+    driver: local
+networks:
+  traefik:
+    external:
+      name: traefik_proxy2
+services:
+  api:
+    image: nginx:latest
+    volumes:
+      - /var/www/codeheures/api:/var/www/codeheures/api
+      - logs_api:/var/logs
+      - ./api.conf:/etc/nginx/conf.d/api.conf
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=80"
+        - "traefik.backend=api-codeheures"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:api.codeheures.com"
+  adminer:
+    image: nginx:latest
+    volumes:
+      - /var/www/adminer:/var/www/adminer
+      - logs_adminer:/var/logs
+      - ./adminer.conf:/etc/nginx/conf.d/adminer.conf
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=80"
+        - "traefik.backend=adminer-codeheures"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:adminer.codeheures.com"
+        - "traefik.frontend.auth.basic=sylvain:$$apr1$$YuXSTghB$$ED5vjLJdNctJ14BVWQFsC1"
+  php:
+    image: codeheures/php-fpm:v1
+    volumes:
+      - /var/www:/var/www
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=false"
+  front:
+    image: codeheures/npm:v1
+    volumes:
+      - /var/www/codeheures/front:/var/www/codeheures/front
+    working_dir: /var/www/codeheures/front
+    command: bash -c "npm run build && npm run start"
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=8002"
+        - "traefik.backend=codeheures"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:codeheures.com"
