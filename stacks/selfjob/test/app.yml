@@ -8,6 +8,8 @@ volumes:
     driver: local
   elastic:
     driver: local
+  mariadb:
+    driver: local
 networks:
   traefik:
     external:
@@ -61,7 +63,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - /var/lib/mysql:/var/lib/mysql
+      - mariadb:/var/lib/mysql
     networks:
       - traefik
     deploy:

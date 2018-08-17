@@ -2,7 +2,11 @@ version: "3.4"
 volumes:
   logs_api:
     driver: local
+  logs_subdomains:
+    driver: local
   logs_adminer:
+    driver: local
+  mariadb:
     driver: local
 networks:
   traefik:
@@ -25,6 +29,26 @@ services:
         - "traefik.backend=api-codeheures"
         - "traefik.enable=true"
         - "traefik.frontend.rule=Host:api.codeheures.test"
+  subdomains:
+    image: nginx:latest
+    volumes:
+    - /var/www/codeheures:/var/www/codeheures
+    - logs_subdomains:/var/logs
+    - ./subdomains.conf:/etc/nginx/conf.d/subdomains.conf
+    networks:
+    - traefik
+    deploy:
+      replicas: 1
+      labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.port=80"
+      - "traefik.backend=subdomains-codeheures"
+      - "traefik.enable=true"
+      - "traefik.poem.frontend.rule=Host:poem.codeheures.test"
+      - "traefik.ficheproduit.frontend.rule=Host:ficheproduit.codeheures.test"
+      - "traefik.edania.frontend.rule=Host:edania.codeheures.test"
+      - "traefik.frigo.frontend.rule=Host:frigo.codeheures.test"
+      - "traefik.lpatccms.frontend.rule=Host:lpatc-cms.codeheures.test"
   adminer:
     image: nginx:latest
     volumes:
@@ -52,6 +76,18 @@ services:
       replicas: 1
       labels:
         - "traefik.enable=false"
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+    - mariadb:/var/lib/mysql
+    networks:
+    - traefik
+    deploy:
+      replicas: 1
+      labels:
+      - "traefik.enable=false"
   front:
     image: codeheures/npm:v1
     volumes:
