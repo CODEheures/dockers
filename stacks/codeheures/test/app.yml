@@ -49,6 +49,7 @@ services:
       - "traefik.edania.frontend.rule=Host:edania.codeheures.com"
       - "traefik.frigo.frontend.rule=Host:frigo.codeheures.com"
       - "traefik.lpatccms.frontend.rule=Host:lpatc-cms.codeheures.com"
+      - "traefik.serverdoc.frontend.rule=Host:server.doc.codeheures.com"
   adminer:
     image: nginx:latest
     volumes:
