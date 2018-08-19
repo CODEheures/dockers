@@ -46,4 +46,4 @@ entryPoint = "https"
 
 [[acme.domains]]
   main = "codeheures.fr"
-  sans = ["server.doc.codeheures.fr", "api.codeheures.fr","poem.codeheures.fr", "ficheproduit.codeheures.fr", "edania.codeheures.fr", "frigo.codeheures.fr", "lpatc-cms.codeheures.fr", "adminer.codeheures.fr", "traefik.codeheures.fr", "selfjob.codeheures.fr", "api-selfjob.codeheures.fr", "echo-selfjob.codeheures.fr", "adminer-selfjob.codeheures.fr", "elastic-selfjob.codeheures.fr"]
+  sans = ["docs.codeheures.fr", "api.codeheures.fr","poem.codeheures.fr", "ficheproduit.codeheures.fr", "edania.codeheures.fr", "frigo.codeheures.fr", "lpatc-cms.codeheures.fr", "adminer.codeheures.fr", "traefik.codeheures.fr", "selfjob.codeheures.fr", "api-selfjob.codeheures.fr", "echo-selfjob.codeheures.fr", "adminer-selfjob.codeheures.fr", "elastic-selfjob.codeheures.fr"]
