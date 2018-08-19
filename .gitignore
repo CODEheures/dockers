@@ -1,1 +1,3 @@
 /.idea
+stacks/traefik/test/acme.json
+stacks/traefik/prod/acme.json
