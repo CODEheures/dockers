@@ -1,0 +1,4 @@
+#!/bin/bash
+# docker
+alias whoIsDockerAngular='docker container ls | grep codeheures/angular:v1 | grep lab_ | awk '\''{print $1 }'\'''
+alias logsangular='docker container logs --follow $(whoIsDockerAngular)'

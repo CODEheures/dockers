@@ -11,6 +11,7 @@ services:
     networks:
       - proxy1
       - proxy2
+      - proxylab
     deploy:
       restart_policy:
         condition: on-failure
@@ -20,3 +21,4 @@ services:
 networks:
   proxy1:
   proxy2:
+  proxylab:

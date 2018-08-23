@@ -1,0 +1,22 @@
+version: "3.4"
+networks:
+  traefik:
+    external:
+      name: traefik_proxylab
+services:
+  testAngular:
+    image: codeheures/angular:v1
+    volumes:
+    - /var/www/lab/dream:/var/www/lab/dream
+    working_dir: /var/www/lab/dream
+    command: ng serve
+    networks:
+    - traefik
+    deploy:
+      replicas: 1
+      labels:
+      - "traefik.docker.network=traefik"
+      - "traefik.port=4200"
+      - "traefik.backend=angular"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:angular.test"
