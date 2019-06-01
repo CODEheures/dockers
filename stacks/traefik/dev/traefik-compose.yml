@@ -11,6 +11,8 @@ services:
     networks:
       - proxy1
       - proxy2
+      - proxyaceservices
+      - proxyemmasophro
       - proxylab
     deploy:
       restart_policy:
@@ -21,4 +23,6 @@ services:
 networks:
   proxy1:
   proxy2:
+  proxyaceservices:
+  proxyemmasophro:
   proxylab:

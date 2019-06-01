@@ -1,0 +1,68 @@
+version: "3.4"
+volumes:
+  logs_emmasophro:
+    driver: local
+  logs_adminer:
+    driver: local
+  mariadb:
+    driver: local
+networks:
+  traefik:
+    external:
+      name: traefik_proxyemmasophro
+services:
+  emmasophro:
+    image: nginx:latest
+    volumes:
+      - /var/www/emma-sophro:/var/www/emma-sophro
+      - logs_emmasophro:/var/logs
+      - ./emmasophro.conf:/etc/nginx/conf.d/emmasophro.conf
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=80"
+        - "traefik.backend=emmasophro"
+        - "traefik.enable=true"
+        - "traefik.emmasophro.frontend.rule=Host:emma-sophro.codeheures.fr"
+  adminer:
+    image: nginx:latest
+    volumes:
+      - /var/www/adminer:/var/www/adminer
+      - logs_adminer:/var/logs
+      - ./adminer-emmasophro.conf:/etc/nginx/conf.d/adminer-emmasophro.conf
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=80"
+        - "traefik.backend=adminer-emmasophro"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:adminer-emmasophro.codeheures.fr"
+        - "traefik.frontend.auth.basic=sylvain:$$apr1$$YuXSTghB$$ED5vjLJdNctJ14BVWQFsC1"
+  php:
+    image: codeheures/php-fpm:v1
+    volumes:
+      - /var/www:/var/www
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.enable=false"
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+    - mariadb:/var/lib/mysql
+    networks:
+    - traefik
+    deploy:
+      replicas: 1
+      labels:
+      - "traefik.enable=false"

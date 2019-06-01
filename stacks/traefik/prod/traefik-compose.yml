@@ -12,6 +12,8 @@ services:
     networks:
       - proxy1
       - proxy2
+      - proxyaceservices
+      - proxyemmasophro
     deploy:
       restart_policy:
         condition: on-failure
@@ -21,3 +23,5 @@ services:
 networks:
   proxy1:
   proxy2:
+  proxyaceservices:
+  proxyemmasophro:
