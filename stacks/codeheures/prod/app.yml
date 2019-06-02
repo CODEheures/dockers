@@ -33,7 +33,8 @@ services:
     image: nginx:latest
     volumes:
     - /var/www/codeheures:/var/www/codeheures
-    - /var/www/ace-services:/var/www/ace-services
+    - /var/www/aceservices:/var/www/aceservices
+    - /var/www/emmasophro:/var/www/emmasophro
     - logs_subdomains:/var/logs
     - ./subdomains.conf:/etc/nginx/conf.d/subdomains.conf
     networks:
@@ -52,6 +53,7 @@ services:
       - "traefik.lpatccms.frontend.rule=Host:lpatc-cms.codeheures.fr"
       - "traefik.docs.frontend.rule=Host:docs.codeheures.fr"
       - "traefik.aceservices.frontend.rule=Host:ace-services.codeheures.fr"
+      - "traefik.emmasophro.frontend.rule=Host:emma-sophro.codeheures.fr"
   adminer:
     image: nginx:latest
     volumes:
