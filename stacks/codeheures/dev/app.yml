@@ -54,6 +54,26 @@ services:
       - "traefik.docs.frontend.rule=Host:docs.codeheures.test"
       - "traefik.aceservices.frontend.rule=Host:ace-services.codeheures.test"
       - "traefik.emmasophro.frontend.rule=Host:emma-sophro.codeheures.test"
+  aceservices:
+    image: wordpress
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: aceservices
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=80"
+        - "traefik.backend=aceservices-codeheures"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:ace-services.codeheures.test"
   adminer:
     image: nginx:latest
     volumes:

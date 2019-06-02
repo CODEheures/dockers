@@ -33,8 +33,6 @@ services:
     image: nginx:latest
     volumes:
     - /var/www/codeheures:/var/www/codeheures
-    - /var/www/aceservices:/var/www/aceservices
-    - /var/www/emmasophro:/var/www/emmasophro
     - logs_subdomains:/var/logs
     - ./subdomains.conf:/etc/nginx/conf.d/subdomains.conf
     networks:
@@ -52,8 +50,26 @@ services:
       - "traefik.frigo.frontend.rule=Host:frigo.codeheures.fr"
       - "traefik.lpatccms.frontend.rule=Host:lpatc-cms.codeheures.fr"
       - "traefik.docs.frontend.rule=Host:docs.codeheures.fr"
-      - "traefik.aceservices.frontend.rule=Host:ace-services.codeheures.fr"
-      - "traefik.emmasophro.frontend.rule=Host:emma-sophro.codeheures.fr"
+  aceservices:
+    image: wordpress
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: aceservices
+    networks:
+      - traefik
+    deploy:
+      replicas: 1
+      labels:
+        - "traefik.docker.network=traefik"
+        - "traefik.port=80"
+        - "traefik.backend=aceservices-codeheures"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:ace-services.codeheures.fr"
   adminer:
     image: nginx:latest
     volumes:
