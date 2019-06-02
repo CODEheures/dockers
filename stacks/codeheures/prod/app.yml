@@ -50,6 +50,7 @@ services:
       - "traefik.frigo.frontend.rule=Host:frigo.codeheures.fr"
       - "traefik.lpatccms.frontend.rule=Host:lpatc-cms.codeheures.fr"
       - "traefik.docs.frontend.rule=Host:docs.codeheures.fr"
+      - "traefik.aceservices.frontend.rule=Host:ace-services.codeheures.fr"
   adminer:
     image: nginx:latest
     volumes:

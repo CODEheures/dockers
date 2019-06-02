@@ -50,6 +50,7 @@ services:
       - "traefik.frigo.frontend.rule=Host:frigo.codeheures.test"
       - "traefik.lpatccms.frontend.rule=Host:lpatc-cms.codeheures.test"
       - "traefik.docs.frontend.rule=Host:docs.codeheures.test"
+      - "traefik.aceservices.frontend.rule=Host:ace-services.codeheures.test"
   adminer:
     image: nginx:latest
     volumes:
