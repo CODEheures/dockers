@@ -56,9 +56,6 @@ services:
       - "traefik.emmasophro.frontend.rule=Host:emma-sophro.codeheures.test"
   aceservices:
     image: wordpress
-    restart: always
-    ports:
-      - 80:80
     environment:
       WORDPRESS_DB_HOST: mariadb
       WORDPRESS_DB_USER: root

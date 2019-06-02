@@ -52,9 +52,6 @@ services:
       - "traefik.docs.frontend.rule=Host:docs.codeheures.fr"
   aceservices:
     image: wordpress
-    restart: always
-    ports:
-      - 80:80
     environment:
       WORDPRESS_DB_HOST: mariadb
       WORDPRESS_DB_USER: root
