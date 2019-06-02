@@ -33,6 +33,7 @@ services:
     image: nginx:latest
     volumes:
     - /var/www/codeheures:/var/www/codeheures
+    - /var/www/ace-services:/var/www/ace-services
     - logs_subdomains:/var/logs
     - ./subdomains.conf:/etc/nginx/conf.d/subdomains.conf
     networks:
